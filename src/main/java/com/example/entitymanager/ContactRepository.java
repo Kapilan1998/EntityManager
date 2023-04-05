@@ -1,6 +1,7 @@
 package com.example.entitymanager;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,8 @@ import java.util.List;
 @Repository
 public class ContactRepository {
 
-    @Autowired
+//    @Autowired
+    @PersistenceContext
     private EntityManager entityManager;
 
     @Transactional
@@ -27,5 +29,16 @@ public class ContactRepository {
 
     public Contact findById(Integer contactID){
         return entityManager.find(Contact.class,contactID);
+    }
+
+    @Transactional
+    public Contact update(Contact contact){
+        return entityManager.merge(contact);
+    }
+
+    @Transactional
+    public void delete(Integer id){
+        Contact contact = entityManager.find(Contact.class,id);
+        entityManager.remove(contact);
     }
 }
